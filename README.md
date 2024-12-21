@@ -1,16 +1,28 @@
 # all-is-all
+
 A minimalist showcase for all my digital projects and experiments.
+
+🔗 [Live Demo](https://all.closeai.moe/)
 
 ## Features
 
-- Clean, minimalist design
-- Mobile-friendly responsive layout
-- Two view modes (desktop only):
+- 🎨 Clean, minimalist design
+- 📱 Mobile-friendly responsive layout
+- 🔄 Two view modes (desktop only):
   - Grid view: Card-based layout
   - List view: Table-like layout
-- Project tagging system
-- No build tools required
-- Easy configuration through web interface
+- 🏷️ Project tagging system
+- ⚡ No build tools required
+- 🔧 Easy configuration through web interface
+
+## Navigation Tips
+
+- Homepage (`/`):
+  - 📋 Click "fork" in footer to get your own copy
+  - ⚙️ Click "make" in footer to access the config page
+
+- Config page (`/config`):
+  - 🏠 Click "ALL" in the header to return to homepage
 
 ## Usage
 
