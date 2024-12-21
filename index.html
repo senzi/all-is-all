@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All is All</title>
+    <link rel='stylesheet' href='https://chinese-fonts-cdn.deno.dev/packages/lxgwwenkaibright/dist/LXGWBright-SemiLight/result.css' /> 
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'LXGW Bright SemiLight',monospace;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #888;
+            font-size: 1em;
+        }
+
+        .projects {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+
+        .project-card {
+            background: #111;
+            padding: 20px;
+            border-radius: 4px;
+            transition: transform 0.2s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-2px);
+            background: #222;
+        }
+
+        .project-name {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .project-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+
+        .project-tags {
+            margin-top: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #333;
+            color: #999;
+            padding: 2px 8px;
+            border-radius: 2px;
+            font-size: 0.8em;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #444;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>All is All</h1>
+            <p class="description">Musings & Miscellany</p>
+        </header>
+
+        <div class="projects" id="projects-container">
+            <!-- Projects will be loaded here -->
+        </div>
+
+        <footer style="font-size: 12.8px;">
+            feel free to <a href="https://github.com/YOUR_REPO" style="text-decoration: none; color: inherit;">fork</a> and 
+            <a href="config" style="text-decoration: none; color: inherit;">make</a> it your own
+        </footer>
+    </div>
+
+    <script>
+        fetch('projects.json')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('projects-container');
+                data.projects.forEach(project => {
+                    const card = `
+                        <div class="project-card">
+                            <a href="${project.url}" class="project-name" target="_blank">${project.name}</a>
+                            <p class="project-description">${project.description}</p>
+                            <div class="project-tags">
+                                ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            })
+            .catch(error => console.error('Error loading projects:', error));
+    </script>
+</body>
+</html>

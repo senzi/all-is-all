@@ -1,0 +1,22 @@
+{
+    "projects": [
+        {
+            "name": "Project One",
+            "url": "https://example.com/1",
+            "description": "A cool tool for something interesting",
+            "tags": ["web", "tool"]
+        },
+        {
+            "name": "Project Two",
+            "url": "https://example.com/2",
+            "description": "Another amazing experiment",
+            "tags": ["experiment", "js"]
+        },
+        {
+            "name": "Project Three",
+            "url": "https://example.com/3",
+            "description": "Something unique and useful",
+            "tags": ["utility", "python"]
+        }
+    ]
+}

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON is ALL</title>
+    <link rel='stylesheet'
+        href='https://chinese-fonts-cdn.deno.dev/packages/lxgwwenkaibright/dist/LXGWBright-SemiLight/result.css' />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'LXGW Bright SemiLight', monospace;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            background: #111;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #888;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            background: #222;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 3px;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 60px;
+        }
+
+        button {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-family: inherit;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        .buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #projectsList {
+            margin: 20px 0;
+        }
+
+        .project-item {
+            background: #111;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            position: relative;
+            cursor: move;
+            user-select: none;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .project-item.dragging {
+            opacity: 0.5;
+            background: #222;
+        }
+
+        .project-item:hover {
+            background: #181818;
+        }
+
+        .project-item::before {
+            content: '☰';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            font-size: 20px;
+        }
+
+        .project-content {
+            margin-left: 30px;
+        }
+
+        .delete-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: #500;
+            padding: 5px 10px;
+        }
+
+        .delete-btn:hover {
+            background: #700;
+        }
+
+        .edit-btn {
+            position: absolute;
+            right: 60px;
+            top: 10px;
+            background: #052;
+            padding: 5px 10px;
+        }
+
+        .edit-btn:hover {
+            background: #073;
+        }
+
+        #preview {
+            background: #111;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-size: 0.9em;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .file-upload {
+            display: none;
+        }
+
+        .upload-btn-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .upload-btn {
+            background: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .upload-btn:hover {
+            background: #444;
+        }
+
+        .drag-placeholder {
+            background: #222;
+            border: 2px dashed #444;
+            margin-bottom: 10px;
+            height: 100px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>JSON is ALL</h1>
+
+        <div class="form-group">
+            <label for="name">Project Name:</label>
+            <input type="text" id="name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="url">Project URL:</label>
+            <input type="text" id="url" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="tags">Tags (comma separated):</label>
+            <input type="text" id="tags" placeholder="web, tool, experiment">
+        </div>
+
+        <div class="buttons">
+            <button onclick="addProject()">Add Project</button>
+            <button onclick="generateJSON()">Preview JSON</button>
+            <button onclick="downloadJSON()">Download JSON</button>
+            <button onclick="clearAll()">Clear All</button>
+            <button onclick="document.getElementById('fileInput').click()">Import JSON</button>
+            <input type="file" id="fileInput" accept=".json" onchange="importJSON(this)" style="display: none;">
+        </div>
+
+        <div id="projectsList"></div>
+        <pre id="preview"></pre>
+    </div>
+
+    <script>
+        let projects = [];
+        let editIndex = -1;
+        let draggedItem = null;
+
+        function addProject() {
+            const name = document.getElementById('name').value;
+            const url = document.getElementById('url').value;
+            const description = document.getElementById('description').value;
+            const tags = document.getElementById('tags').value
+                .split(',')
+                .map(tag => tag.trim())
+                .filter(tag => tag);
+
+            if (!name || !url || !description) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            if (editIndex >= 0) {
+                projects[editIndex] = { name, url, description, tags };
+                editIndex = -1;
+            } else {
+                projects.push({ name, url, description, tags });
+            }
+
+            updateProjectsList();
+            clearForm();
+        }
+
+        function clearForm() {
+            document.getElementById('name').value = '';
+            document.getElementById('url').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('tags').value = '';
+            editIndex = -1;
+        }
+
+        function editProject(index) {
+            const project = projects[index];
+            document.getElementById('name').value = project.name;
+            document.getElementById('url').value = project.url;
+            document.getElementById('description').value = project.description;
+            document.getElementById('tags').value = project.tags.join(', ');
+            editIndex = index;
+        }
+
+        function updateProjectsList() {
+            const list = document.getElementById('projectsList');
+            list.innerHTML = projects.map((project, index) => `
+                <div class="project-item" draggable="true" data-index="${index}">
+                    <button class="delete-btn" onclick="deleteProject(${index})">X</button>
+                    <button class="edit-btn" onclick="editProject(${index})">Edit</button>
+                    <div class="project-content">
+                        <strong>${project.name}</strong><br>
+                        URL: ${project.url}<br>
+                        Description: ${project.description}<br>
+                        Tags: ${project.tags.join(', ')}
+                    </div>
+                </div>
+            `).join('');
+
+            // Add drag and drop listeners
+            const items = list.getElementsByClassName('project-item');
+            Array.from(items).forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('drop', handleDrop);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedItem = e.target;
+            e.target.classList.add('dragging');
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            draggedItem = null;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            const item = e.target.closest('.project-item');
+            if (!item || item === draggedItem) return;
+
+            const list = document.getElementById('projectsList');
+            const items = [...list.getElementsByClassName('project-item')];
+            const draggedIndex = items.indexOf(draggedItem);
+            const hoverIndex = items.indexOf(item);
+
+            if (draggedIndex < hoverIndex) {
+                item.parentNode.insertBefore(draggedItem, item.nextSibling);
+            } else {
+                item.parentNode.insertBefore(draggedItem, item);
+            }
+
+            // Update projects array
+            const newProjects = [];
+            document.querySelectorAll('.project-item').forEach(item => {
+                const index = parseInt(item.dataset.index);
+                newProjects.push(projects[index]);
+            });
+            projects = newProjects;
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+        }
+
+        function deleteProject(index) {
+            projects.splice(index, 1);
+            updateProjectsList();
+        }
+
+        function generateJSON() {
+            const json = JSON.stringify({ projects }, null, 2);
+            const preview = document.getElementById('preview');
+            preview.style.display = 'block';
+            preview.textContent = json;
+        }
+
+        function downloadJSON() {
+            const json = JSON.stringify({ projects }, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'projects.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function importJSON(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (data.projects && Array.isArray(data.projects)) {
+                            if (projects.length > 0 && !confirm('Current projects will be replaced. Continue?')) {
+                                return;
+                            }
+                            projects = data.projects;
+                            updateProjectsList();
+                        } else {
+                            alert('Invalid JSON format. File must contain a "projects" array.');
+                        }
+                    } catch (error) {
+                        alert('Error parsing JSON file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            }
+            input.value = '';
+        }
+
+        function clearAll() {
+            if (confirm('Are you sure you want to clear all projects?')) {
+                projects = [];
+                updateProjectsList();
+                document.getElementById('preview').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
