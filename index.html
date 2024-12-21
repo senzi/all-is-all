@@ -17,12 +17,17 @@
             color: #fff;
             font-family: 'LXGW Bright SemiLight',monospace;
             line-height: 1.6;
-            padding: 20px;
+            margin: 0;
+            padding-top: 20px;
+            position: relative;
+            min-height: 100vh;
+            padding-bottom: 60px; /* Height of the footer */
         }
 
         .container {
-            max-width: 800px;
+            width: 800px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
         header {
@@ -43,7 +48,7 @@
         .projects {
             display: grid;
             gap: 20px;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
         }
 
         .project-card {
@@ -51,6 +56,9 @@
             padding: 20px;
             border-radius: 4px;
             transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .project-card:hover {
@@ -67,11 +75,12 @@
         .project-description {
             color: #666;
             font-size: 0.9em;
-            margin-top: 8px;
+            margin: 8px 0;
+            flex-grow: 1;
         }
 
         .project-tags {
-            margin-top: 10px;
+            margin-top: auto;
         }
 
         .tag {
@@ -85,32 +94,125 @@
             margin-bottom: 5px;
         }
 
-        footer {
-            margin-top: 40px;
-            text-align: center;
+        .view-switcher {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .view-switcher span {
+            color: #666;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .view-switcher span.active {
+            color: #fff;
+        }
+
+        .view-switcher span:not(:last-child):after {
+            content: " / ";
             color: #444;
-            font-size: 0.8em;
+            margin: 0 5px;
+            cursor: default;
+        }
+
+        .projects.table-view {
+            display: block;
+        }
+
+        .projects.table-view .project-card {
+            display: grid;
+            grid-template-columns: 200px 1fr 250px;
+            gap: 20px;
+            margin-bottom: 1px;
+            padding: 15px 20px;
+            border-radius: 0;
+            height: auto;
+            align-items: center;
+        }
+
+        .projects.table-view .project-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .projects.table-view .project-description {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+            color: #666;
+        }
+
+        .projects.table-view .project-tags {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+            text-align: right;
+        }
+
+        .projects.table-view .tag {
+            margin-bottom: 0;
+        }
+
+        footer {
+            text-align: center;
+            color: #505050;
+            font-size: 1em;
+            padding: 20px;
+            background: #111;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>All is All</h1>
+            <h1>All is NOT @all</h1>
             <p class="description">Musings & Miscellany</p>
         </header>
+
+        <div class="view-switcher">
+            <span id="gridView" class="active">Grid</span>
+            <span id="tableView">List</span>
+        </div>
 
         <div class="projects" id="projects-container">
             <!-- Projects will be loaded here -->
         </div>
 
-        <footer style="font-size: 12.8px;">
-            feel free to <a href="https://github.com/YOUR_REPO" style="text-decoration: none; color: inherit;">fork</a> and 
-            <a href="config" style="text-decoration: none; color: inherit;">make</a> it your own
+        <footer>
+            Feel free to<span style="margin: 0 4px;"><a href="https://github.com/senzi/all-is-all" style="text-decoration: none; color: inherit;">fork</a></span>and<span style="margin: 0 4px;"><a href="config" style="text-decoration: none; color: inherit;">make</a></span>it your own
         </footer>
     </div>
 
     <script>
+        const gridViewBtn = document.getElementById('gridView');
+        const tableViewBtn = document.getElementById('tableView');
+        const projectsContainer = document.getElementById('projects-container');
+
+        gridViewBtn.addEventListener('click', () => {
+            projectsContainer.classList.remove('table-view');
+            gridViewBtn.classList.add('active');
+            tableViewBtn.classList.remove('active');
+        });
+
+        tableViewBtn.addEventListener('click', () => {
+            projectsContainer.classList.add('table-view');
+            tableViewBtn.classList.add('active');
+            gridViewBtn.classList.remove('active');
+        });
+
         fetch('projects.json')
             .then(response => response.json())
             .then(data => {
