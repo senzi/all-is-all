@@ -21,7 +21,7 @@
             padding-top: 20px;
             position: relative;
             min-height: 100vh;
-            padding-bottom: 60px; /* Height of the footer */
+            padding-bottom: 60px;
         }
 
         .container {
@@ -30,9 +30,76 @@
             padding: 0 20px;
         }
 
+        @media (max-width: 840px) {
+            .container {
+                width: 100%;
+            }
+
+            .view-switcher {
+                display: none;
+            }
+
+            .projects {
+                display: block !important;
+            }
+
+            .project-card {
+                margin-bottom: 15px;
+            }
+
+            .project-description {
+                margin: 8px 0;
+            }
+
+            .project-tags {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .project-card {
+                padding: 15px;
+            }
+
+            .project-name {
+                font-size: 0.95em;
+            }
+
+            .project-url {
+                font-size: 0.75em;
+            }
+
+            .project-description {
+                font-size: 0.85em;
+            }
+
+            .tag {
+                font-size: 0.75em;
+                padding: 1px 6px;
+            }
+        }
+
         header {
             margin: 40px 0;
             text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            header {
+                margin: 20px 0;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .description {
+                font-size: 0.9em;
+            }
         }
 
         h1 {
@@ -49,6 +116,18 @@
             display: grid;
             gap: 20px;
             grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (max-width: 840px) {
+            .projects {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .projects {
+                grid-template-columns: 1fr;
+            }
         }
 
         .project-card {
@@ -142,6 +221,22 @@
             border-radius: 0;
             height: auto;
             align-items: center;
+        }
+
+        @media (max-width: 840px) {
+            .projects.table-view .project-card {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .projects.table-view .project-description {
+                margin: 8px 0;
+            }
+
+            .projects.table-view .project-tags {
+                text-align: left;
+            }
         }
 
         .projects.table-view .project-name {
