@@ -32,6 +32,11 @@
             margin-bottom: 20px;
         }
 
+        h1 a {
+            color: inherit;
+            text-decoration: none;
+        }
+
         .form-group {
             margin-bottom: 15px;
             background: #111;
@@ -185,7 +190,7 @@
 
 <body>
     <div class="container">
-        <h1>JSON is ALL</h1>
+        <h1>But JSON is <a href="/">ALL</a></h1>
 
         <div class="form-group">
             <label for="name">Project Name:</label>
@@ -318,13 +323,15 @@
                 item.parentNode.insertBefore(draggedItem, item);
             }
 
-            // Update projects array
-            const newProjects = [];
-            document.querySelectorAll('.project-item').forEach(item => {
-                const index = parseInt(item.dataset.index);
-                newProjects.push(projects[index]);
+            // Update projects array to match the new order
+            projects = [...document.querySelectorAll('.project-item')].map(item =>
+                projects[parseInt(item.dataset.index)]
+            );
+
+            // Update data-index attributes to match new order
+            document.querySelectorAll('.project-item').forEach((item, index) => {
+                item.dataset.index = index;
             });
-            projects = newProjects;
         }
 
         function handleDrop(e) {

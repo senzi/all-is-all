@@ -1,22 +1,54 @@
 {
-    "projects": [
-        {
-            "name": "Project One",
-            "url": "https://example.com/1",
-            "description": "A cool tool for something interesting",
-            "tags": ["web", "tool"]
-        },
-        {
-            "name": "Project Two",
-            "url": "https://example.com/2",
-            "description": "Another amazing experiment",
-            "tags": ["experiment", "js"]
-        },
-        {
-            "name": "Project Three",
-            "url": "https://example.com/3",
-            "description": "Something unique and useful",
-            "tags": ["utility", "python"]
-        }
-    ]
+  "projects": [
+    {
+      "name": "all is all",
+      "url": "all.closeai.moe",
+      "description": "All is NOT @all",
+      "tags": [
+        "HTML"
+      ]
+    },
+    {
+      "name": "Gathering none",
+      "url": "none.closeai.moe",
+      "description": "Whimsical Collection Games",
+      "tags": [
+        "Game",
+        "Mapping"
+      ]
+    },
+    {
+      "name": "Reverse Captcha",
+      "url": "bot.closeai.moe",
+      "description": "A reversed CAPTCHA that proves you're a robot by recognizing AprilTag sequences",
+      "tags": [
+        "CAPTCHA"
+      ]
+    },
+    {
+      "name": "LLM字集",
+      "url": "zi.closeai.moe",
+      "description": "文字收集游戏",
+      "tags": [
+        "Vite+VUE",
+        "Pinia"
+      ]
+    },
+    {
+      "name": "LLM ctf",
+      "url": "ctf.closeai.moe",
+      "description": "LLM 提示词注入挑战赛 赛后总结",
+      "tags": [
+        "LLM"
+      ]
+    },
+    {
+      "name": "rick-astley",
+      "url": "rick-astley.pages.dev",
+      "description": "rick-astley",
+      "tags": [
+        "w"
+      ]
+    }
+  ]
 }

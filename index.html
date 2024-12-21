@@ -70,6 +70,19 @@
             color: #fff;
             text-decoration: none;
             font-weight: bold;
+            display: block;
+        }
+
+        .project-url {
+            color: #505050;
+            text-decoration: none;
+            font-size: 0.8em;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .project-url:hover {
+            color: #666;
         }
 
         .project-description {
@@ -220,7 +233,10 @@
                 data.projects.forEach(project => {
                     const card = `
                         <div class="project-card">
-                            <a href="${project.url}" class="project-name" target="_blank">${project.name}</a>
+                            <div>
+                                <a href="https://${project.url}" class="project-name" target="_blank">${project.name}</a>
+                                <a href="https://${project.url}" class="project-url" target="_blank">${project.url}</a>
+                            </div>
                             <p class="project-description">${project.description}</p>
                             <div class="project-tags">
                                 ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
