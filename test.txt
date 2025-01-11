@@ -1,0 +1,1 @@
+"test"  git add test.txt git commit -m "test GPG signing"
